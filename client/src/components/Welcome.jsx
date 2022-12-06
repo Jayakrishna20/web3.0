@@ -5,6 +5,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import { TransactionContext } from "../context/TransactionContext";
 import { Loader } from "./";
 import { useContext } from "react";
+import { shortenAddress } from "../utils/shorthenAddress";
 
 const commonStyles =
   "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
@@ -21,14 +22,21 @@ const Input = ({ placeholder, name, type, value, handleChange }) => (
 );
 
 const Welcome = () => {
-  const { connectWallet, currentAccount, formData, sendTransaction, handleChange } = useContext(TransactionContext);
+  const {
+    connectWallet,
+    currentAccount,
+    formData,
+    sendTransaction,
+    handleChange,
+    isLoading
+  } = useContext(TransactionContext);
 
   const handleSubmit = (e) => {
     const { addressTo, amount, keyword, message } = formData;
 
     e.preventDefault();
 
-    if(!addressTo || !amount || !keyword || !message) return;
+    if (!addressTo || !amount || !keyword || !message) return;
 
     sendTransaction();
   };
@@ -41,7 +49,8 @@ const Welcome = () => {
             Send Crypto <br /> across the world
           </h1>
           <p className="text-left mt-5 text-white font-light md:w-9/12 w-11/12 text-base">
-            Explore the crypto world. Buy and sell cryptocurrencies easily on Krypto.
+            Explore the crypto world. Buy and sell cryptocurrencies easily on
+            Krypto.
           </p>
           {!currentAccount && (
             <button
@@ -76,7 +85,7 @@ const Welcome = () => {
               <BsInfoCircle fontSize={17} color="#fff" />
             </div>
             <div>
-              <p className="text-white font-light text-sm">Address</p>
+              <p className="text-white font-light text-sm">{shortenAddress(currentAccount)}</p>
               <p className="text-white font-semibold text-lg mt-1">Ethereum</p>
             </div>
           </div>
@@ -96,7 +105,7 @@ const Welcome = () => {
             handleChange={handleChange}
           />
           <Input
-            placeholder="KeyWord (GIF)"
+            placeholder="Keyword (GIF)"
             name="keyword"
             type="text"
             handleChange={handleChange}
@@ -110,7 +119,7 @@ const Welcome = () => {
 
           <div className="h-[1px] w-full bg-gray-400 my-2" />
 
-          {false ? (
+          {isLoading ? (
             <Loader />
           ) : (
             <button
